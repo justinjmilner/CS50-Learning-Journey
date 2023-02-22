@@ -1,0 +1,2 @@
+I would characterize their audio aura as Orange, high-energy and bold, confidence boosting sounds.
+I am basing my hypothesis on a small data sample analysis. A better way would be to calculate all averages of the different values, and compare against everyone else to determine their postion on the curve.

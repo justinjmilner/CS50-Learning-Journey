@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <script>
+
+            // Run script once DOM is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+
+                // Store correct class element in correct
+                let correct = document.querySelector('.correct');
+
+                // Give correct an event listener for click which executes a function
+                correct.addEventListener('click', function() {
+
+                    // Change the colors of the answer box and paragraph text
+                    correct.style.backgroundColor = 'green';
+                    correct.style.color = 'white';
+                    document.querySelector('#result1').innerHTML = "Correct!";
+                    document.querySelector('#result1').style.color = "green";
+                });
+
+                // Store the elements with the incorrect class in a variable
+                let incorrects = document.querySelectorAll('.incorrect');
+
+                // Parse through each element giving it all an event listener which will execute a function
+                for (let i = 0; i < incorrects.length; i++) {
+
+                    // If any of the buttons are clicked the function will execute
+                    incorrects[i].addEventListener('click', function() {
+
+                        // Changes the colors of answer box and paragraph text
+                        incorrects[i].style.backgroundColor = 'red';
+                        incorrects[i].style.color = 'white';
+                        document.querySelector('#result1').innerHTML = "Incorrect";
+                        document.querySelector('#result1').style.color = "red";
+                    });
+                }
+
+                document.querySelector('#submit').addEventListener('click', function() {
+                    let input = document.querySelector('input');
+                    if (input.value == '5') {
+                        input.style.backgroundColor = 'green';
+                        input.style.color = 'white';
+                        document.querySelector('#result2').innerHTML = 'Correct!'
+                        document.querySelector('#result2').style.color = 'green';
+                    } else {
+                        input.style.backgroundColor = 'red';
+                        input.style.color = 'white';
+                        document.querySelector('#result2').innerHTML = 'Incorrect';
+                        document.querySelector('#result2').style.color = 'red';
+                    }
+                });
+
+            });
+
+
+
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+
+                <h3>What is the closest planet to Saturn for the majority of its' orbit?</h3>
+
+                <button class="incorrect">Neptune</button>
+                <button class="correct">Jupiter</button>
+                <button class="incorrect">Uranus</button>
+                <button class="incorrect">Mars</button>
+                <button class="incorrect">Pluto</button>
+
+                <p id="result1"></p>
+
+            </div>
+        </div>
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+
+                <h3>What is the ratio of people to sheep in New Zealand?</h3>
+                <input placeholder="Answer here with a whole number" type="text"></input>
+                <button id="submit">Submit</button>
+
+                <p id="result2"></p>
+
+            </div>
+        </div>
+    </body>
+</html>

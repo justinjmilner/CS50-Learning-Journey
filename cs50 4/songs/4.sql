@@ -1,0 +1,1 @@
+SELECT name FROM songs WHERE valence NOT BETWEEN 0 AND 0.75 AND energy NOT BETWEEN 0 AND 0.75 AND danceability NOT BETWEEN 0 AND 0.75;
