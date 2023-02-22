@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <h1 class="header">History</h1>
+    <br>
+    <br>
+    <table action="/history" class="table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Price</th>
+                <th>Shares</th>
+                <th>Tx Value</th>
+                <th>Time</th>
+                <th>Tx Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dict in history %}
+                <tr>
+                    <td>{{ dict.symbol }}</td>
+                    <td>{{ dict.price }}</td>
+                    <td>{{ dict.shares }}</td>
+                    <td>{{ dict.cost }}</td>
+                    <td>{{ dict.time }}</td>
+                    <td>{{ dict.type }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+    <h1 class="header">Portfolio</h1>
+    <br>
+    <br>
+    <table action="/index" class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Symbol</th>
+                <th>Current Price</th>
+                <th>Shares Owned</th>
+                <th>Current Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dict in stockinfo %}
+                <tr>
+                    <td>{{ dict.name }}</td>
+                    <td>{{ dict.symbol }}</td>
+                    <td>{{ dict.price }}</td>
+                    <td>{{ dict.shares }}</td>
+                    <td>{{ dict.value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Total Equity</th>
+                <th>Total Cash</th>
+                <th>Total Balance</th>
+                <th>PNL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ stockbalance }}</td>
+                <td>{{ balance }}</td>
+                <td>{{ total }}</td>
+                <td>{{ pnl }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
