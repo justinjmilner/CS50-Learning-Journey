@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <link href="styles.css" rel="stylesheet">
+        <title>Project</title>
+        <script src="homepage.js"></script>
+    </head>
+    <body>
+        <h1 class="projectsTitle">These are samples of some of my favorite projects.</h1>
+        <h2 class="language">SQL</h2>
+        <p class="code">
+            <pre>
+                -- A log of any SQL queries used to solve the mystery
+
+                -- Get the description for the crime scene report
+                SELECT description
+                FROM crime_scene_reports
+                WHERE year = 2021
+                AND month = 7
+                AND day = 28
+                AND street = 'Humphrey Street';
+                /* Tells us the 3 witnesses used the word bakery, the time of the crime
+                was 10:15am, the location was Humphrey Street Bakery*/
+
+
+                -- Get interview information
+                SELECT transcript, name
+                FROM interviews
+                WHERE year = 2021
+                AND month = 7
+                AND DAY = 28
+                AND transcript LIKE ('%bakery%');
+                /* Witness 1: Exit, 10:15am to 10:25am. Witness 2: ATM withdraw, Leggett Street.
+                Witness 3: Phone call < 60 seconds, earliest flight out of Fiftyville on 29, callee is accomplice.*/
+
+
+                -- Following tables are data which contain the culprit information --
+
+                -- License plates
+                SELECT license_plate
+                FROM bakery_security_logs
+                WHERE hour = 10
+                AND minute BETWEEN 15 AND 25
+                AND activity = 'exit';
+
+
+                -- Bank account numbers
+                SELECT account_number, amount
+                FROM atm_transactions
+                WHERE year = 2021
+                AND month = 7
+                AND day = 28
+                AND atm_location = 'Leggett Street'
+                AND transaction_type = 'withdraw';
+
+
+                -- Phone numbers
+                SELECT caller, receiver
+                FROM phone_calls
+                WHERE year = 2021
+                AND month = 7
+                AND day = 28
+                AND duration < 60;
+
+
+                -- Flight id, and escape destination id
+                SELECT id, origin_airport_id, destination_airport_id
+                FROM flights
+                WHERE year = 2021
+                AND month = 7
+                AND day = 29
+                AND hour = 8
+                AND minute = 20;
+                --  id 36 | origin_airport_id 8 | destination_airport_id 4
+
+
+                -- Escape destination name
+                SELECT abbreviation, full_name, city
+                FROM airports
+                WHERE id = 4;
+                /* CSF | Fiftyville Regional Airport | Fiftyville    ...TO...
+                LGA | LaGuardia Airport | New York City */
+
+
+                -- List of passport numbers
+                SELECT passport_number, seat
+                FROM passengers
+                WHERE flight_id = 36;
+
+
+                -- List of person id's
+                SELECT person_id, creation_year
+                FROM bank_accounts
+                WHERE account_number IN
+                    (SELECT account_number
+                    FROM atm_transactions
+                    WHERE year = 2021
+                    AND month = 7
+                    AND day = 28
+                    AND atm_location = 'Leggett Street'
+                    AND transaction_type = 'withdraw');
+
+
+                -- Get name
+                /* The person will have used a phone number from the evidence, have an id in bank accounts
+                id's from the transaction,
+                a passport number from passengers on board, and a license plate from security footage. */
+                SELECT name
+                FROM people
+                WHERE phone_number IN
+                    (SELECT caller
+                    FROM phone_calls
+                    WHERE year = 2021
+                    AND month = 7
+                    AND day = 28
+                    AND duration < 60)
+                AND license_plate IN
+                    (SELECT license_plate
+                    FROM bakery_security_logs
+                    WHERE hour = 10
+                    AND minute BETWEEN 15 AND 25
+                    AND activity = 'exit')
+                AND passport_number IN
+                    (SELECT passport_number
+                    FROM passengers
+                    WHERE flight_id = 36)
+                AND id IN
+                    (SELECT person_id
+                    FROM bank_accounts
+                    WHERE account_number IN
+                                            (SELECT account_number
+                                            FROM atm_transactions
+                                            WHERE year = 2021
+                                            AND month = 7
+                                            AND day = 28
+                                            AND atm_location = 'Leggett Street'
+                                            AND transaction_type = 'withdraw'));
+
+
+                -- Get phone number of culprit
+                /* The accomplice will be the receiver of the culprits phone number
+                from the list of phone numbers made during the reported call period. */
+                SELECT name
+                FROM people
+                WHERE phone_number IN
+                    (SELECT receiver
+                    FROM phone_calls
+                    WHERE year = 2021
+                    AND month = 7
+                    AND day = 28
+                    AND duration < 60
+                    AND caller =
+                        (SELECT phone_number
+                        FROM people
+                        WHERE id = 686048));
+            </pre>
+        </p>
+        <hr>
+        <h2 class="language">Python</h2>
+        <p class="code">
+            <pre>
+                from cs50 import get_string
+                import re
+
+                # Create a dictionary with card name and the corresponding pattern
+                credit_cards = {"AMEX" : "3[47][0-9]{13}",
+                                "MASTERCARD" : "5[12345][0-9]{14}",
+                                "VISA" : "4[0-9]{12,15}"}
+
+
+                # Check if card passes all tests
+                def main():
+                    result = "INVALID"
+                    number = getInput()
+                    if luhnsAlgo(number) == 0:
+                        for i in credit_cards.keys():
+                            if re.match(credit_cards[i], number):
+                                result = type
+                    print(f"{result}")
+
+
+                # Get valid user to input credit card number
+                def getInput():
+                    while True:
+                        number = get_string("Input credit card number: ")
+                        if int(number) > 0:
+                            return number
+
+
+                # Caculate value of Luhns Algo
+                def luhnsAlgo(number):
+                    digits = digits_of(number)
+                    odd_digits = digits[-1::-2]
+                    even_digits = digits[-2::-2]
+                    checksum = 0
+                    checksum += sum(odd_digits)
+                    for d in even_digits:
+                        checksum += sum(digits_of(d*2))
+                    return checksum % 10
+
+
+                # Convert input to a list of single digit numbers
+                def digits_of(s):
+                    return [int(d) for d in str(s)]
+
+
+                if __name__ == "__main__":
+                    main()
+            </pre>
+        </p>
+        <hr>
+        <h2 class="language">C</h2>
+        <p class="code">
+            <pre>
+                #include <stdint.h>
+                #include <stdio.h>
+                #include <stdlib.h>
+                #include <string.h>
+
+                #include "wav.h"
+
+                int check_format(WAVHEADER header);
+                int get_block_size(WAVHEADER header);
+
+                const int HEADER_SIZE = 44;
+
+                int main(int argc, char *argv[])
+                {
+                    // check for correct input arguments
+                    if (argc != 3)
+                    {
+                        printf("Proper usage err\n");
+                        return 1;
+                    }
+                    int result = strcmp(argv[1], "input.wav");
+                    if (result != 0)
+                    {
+                        printf("Proper input err\n");
+                        return 1;
+                    }
+                    result = strcmp(argv[2], "output.wav");
+                    if (result != 0)
+                    {
+                        printf("Proper output err\n");
+                        return 1;
+                    }
+
+                    // open input.wav file for reading
+                    FILE *input_wav = fopen(argv[1], "r");
+                    if (input_wav == NULL)
+                    {
+                        printf("Input file err\n");
+                        return 1;
+                    }
+
+                    // read the header bytes from the input_wav to a buffer
+                    WAVHEADER bufferHeader;
+                    fread(&bufferHeader, HEADER_SIZE, 1, input_wav);
+                    printf("%li\n", ftell(input_wav));
+
+                    // Use check_format to ensure WAV format
+                    if (check_format(bufferHeader) != 0)
+                    {
+                        printf("File type err\n");
+                        return 2;
+                    }
+
+                    // open the output.wav file for writing
+                    FILE *output_wav = fopen(argv[2], "w");
+                    if (output_wav == NULL)
+                    {
+                        printf("Output file err\n");
+                        return 1;
+                    }
+
+                    // Write header to file
+                    fwrite(&bufferHeader, HEADER_SIZE, 1, output_wav);
+
+                    // Use get_block_size to calculate size of block
+                    int blockSize = get_block_size(bufferHeader);
+                    printf("%i\n", blockSize);
+
+                    // read and write from the end of input into output
+                    BYTE bufferBytes[blockSize];
+                    fseek(input_wav, -blockSize, SEEK_END);
+                    fread(bufferBytes, 1, blockSize, input_wav);
+                    printf("%li\n", ftell(input_wav));
+                    fwrite(bufferBytes, 1, blockSize, output_wav);
+                    while (ftell(input_wav) - blockSize > HEADER_SIZE)
+                    {
+                        fseek(input_wav, -(2 * blockSize), SEEK_CUR);
+                        fread(bufferBytes, 1, blockSize, input_wav);
+                        printf("%li\n", ftell(input_wav));
+                        fwrite(bufferBytes, 1, blockSize, output_wav);
+                    }
+
+                    // close opened files
+                    fclose(input_wav);
+                    fclose(output_wav);
+                    return 0;
+                }
+
+                int check_format(WAVHEADER header)
+                {
+                    // check if bytes 8-11 contain the chars W A V E
+                    if (header.format[0] == 0x57 && header.format[1] == 0x41 && header.format[2] == 0x56 && header.format[3] == 0x45)
+                    {
+                        return 0;
+                    }
+                    return 1;
+                }
+                int get_block_size(WAVHEADER header)
+                {
+                    int blockSize = header.numChannels * (header.bitsPerSample / 8);
+                    return blockSize;
+                }
+            </pre>
+        </p>
+    </body>
+</html>

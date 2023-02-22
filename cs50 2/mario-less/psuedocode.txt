@@ -1,0 +1,6 @@
+// If 1, print a #
+
+// If 2, print space, hash (loop) hash, hash
+
+// If 3, print space, space, hash (loop) space, hash, hash,
+(loop) hash, hash, hash
